@@ -1,19 +1,13 @@
 {
-  "name": "sistema-filas",
+  "name": "senhascmj",
   "version": "1.0.0",
-  "description": "",
+  "description": "Um sistema de gerenciamento de filas para intranet.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "pdfkit": "^0.17.2",
-    "sqlite3": "^5.1.7"
+    "express": "^4.19.2"
   }
 }
