@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo da Recepção</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="reception-module" class="module">
+            <h2>Módulo da Recepção</h2>
+            <p>Contador de Senhas na Fila: <span id="contador-atendidas">0</span></p>
+            <button class="btn-call" onclick="chamarSenhaAtendida()">Chamar Senha Atendida</button>
+            <div style="margin-top: 20px;">
+                <h3>Senha na Recepção:</h3>
+                <p id="senha-recepcao" style="font-size: 2em; font-weight: bold;"></p>
+                <p id="triagem-recepcao"></p>
+            </div>
+        </div>
+    </div>
+    <script src="scripts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Chamadas iniciais para o painel de receção
+            atualizarPainelRecepcao();
+            setInterval(atualizarPainelRecepcao, 3000);
+        });
+    </script>
+</body>
+</html>

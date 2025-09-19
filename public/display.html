@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Senhas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="display-container">
+        <div class="main-display">
+            <h1 class="senha-label">SENHA</h1>
+            <div id="main-senha-box" class="senha-box">
+                <span id="senha-tipo">--</span> 
+                <span id="senha-painel">--</span>
+            </div>
+            <p id="triagem-completa" class="triagem-text"></p>
+        </div>
+        
+        <div class="antigos-display">
+            <h1 class="antigos-label">Anteriores</h1>
+            <div id="antigos-senhas-container" class="antigos-senhas">
+                <div id="antiga-1" class="senha-box-antiga">
+                    <span class="senha-antiga-numero">--</span>
+                </div>
+                <div id="antiga-2" class="senha-box-antiga">
+                    <span class="senha-antiga-numero">--</span>
+                </div>
+                <div id="antiga-3" class="senha-box-antiga">
+                    <span class="senha-antiga-numero">--</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="scripts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            atualizarPainelExibicao();
+            setInterval(atualizarPainelExibicao, 3000);
+        });
+    </script>
+</body>
+</html>
