@@ -2,7 +2,7 @@
 let audioAtivado = false;
 
 // URL base do seu servidor
-const SERVER_URL = 'http://localhost:3000';
+const SERVER_URL = 'https://senhascmj.vercel.app/';
 
 // Função para tocar o áudio
 function playAudio() {
