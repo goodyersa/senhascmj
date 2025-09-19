@@ -4,18 +4,10 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Importa o módulo do SQLite
-const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('./database.sqlite');
-
-// Middleware para processar JSON e habilitar CORS
-app.use(express.json());
-app.use(cors());
-
 const path = require('path');
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Variáveis de estado do sistema
+// Variáveis de estado do sistema (agora em memória para a nuvem)
 let proximaSenhaNormal = 1;
 let proximaSenhaPreferencial = 1;
 let filaNormal = [];
@@ -29,41 +21,7 @@ let ultimasChamadas = [];
 
 // Fila para senhas que foram atendidas e aguardam na receção
 let filaAtendidas = [];
-let chamadaRecepcaoAtual = null; // NOVO: Senha atualmente na receção
-
-// Inicializa o banco de dados e carrega os contadores
-db.serialize(() => {
-    db.run("CREATE TABLE IF NOT EXISTS counters (key TEXT UNIQUE, value INTEGER)", (err) => {
-        if (err) {
-            console.error("Erro ao criar a tabela:", err);
-            return;
-        }
-
-        db.get("SELECT value FROM counters WHERE key = 'totalSenhasGeral'", (err, row) => {
-            if (row) {
-                totalSenhasGeral = row.value;
-            }
-        });
-        db.get("SELECT value FROM counters WHERE key = 'proximaSenhaNormal'", (err, row) => {
-            if (row) {
-                proximaSenhaNormal = row.value;
-            }
-        });
-        db.get("SELECT value FROM counters WHERE key = 'proximaSenhaPreferencial'", (err, row) => {
-            if (row) {
-                proximaSenhaPreferencial = row.value;
-            }
-        });
-        console.log("Contadores carregados do banco de dados.");
-    });
-});
-
-// Função para salvar os contadores no banco de dados
-function saveCounters() {
-    db.run("INSERT OR REPLACE INTO counters (key, value) VALUES (?, ?)", ['totalSenhasGeral', totalSenhasGeral]);
-    db.run("INSERT OR REPLACE INTO counters (key, value) VALUES (?, ?)", ['proximaSenhaNormal', proximaSenhaNormal]);
-    db.run("INSERT OR REPLACE INTO counters (key, value) VALUES (?, ?)", ['proximaSenhaPreferencial', proximaSenhaPreferencial]);
-}
+let chamadaRecepcaoAtual = null;
 
 // Rota para o Módulo do Totem: Gerar Senhas
 app.post('/api/gerar-senha', (req, res) => {
@@ -83,8 +41,6 @@ app.post('/api/gerar-senha', (req, res) => {
     }
 
     totalSenhasGeral++;
-    
-    saveCounters();
 
     res.json({ senha: senhaCompleta, tipo: tipo });
 });
@@ -160,33 +116,6 @@ app.get('/api/recepcao', (req, res) => {
         filaAtendidas: filaAtendidas.length
     });
 });
-
-// Rota para limpar todas as senhas do banco de dados
-app.post('/api/limpar-banco', (req, res) => {
-    db.serialize(() => {
-        db.run("DELETE FROM counters", (err) => {
-            if (err) {
-                console.error("Erro ao limpar o banco de dados:", err);
-                return res.status(500).json({ error: 'Erro ao limpar o banco de dados.' });
-            }
-            
-            proximaSenhaNormal = 1;
-            proximaSenhaPreferencial = 1;
-            totalSenhasGeral = 0;
-            filaNormal = [];
-            filaPreferencial = [];
-            ultimasChamadas = [];
-            filaAtendidas = [];
-            chamadaAtual = null;
-            chamadaRecepcaoAtual = null; // NOVO: Zera também a chamada da receção
-            
-            saveCounters();
-
-            res.status(200).json({ mensagem: 'O banco de dados foi limpo e os contadores foram zerados.' });
-        });
-    });
-});
-
 
 // Rota padrão que serve o arquivo admin.html
 app.get('/', (req, res) => {
